@@ -1,37 +1,94 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useMotionValueEvent } from "framer-motion";
 import Image from "next/image";
-import { Quote, AlertCircle, Lightbulb, Rocket, CheckCircle2 } from "lucide-react";
+import { Quote, AlertCircle, Lightbulb, Rocket } from "lucide-react";
 
-// --- Data: The Narrative Journey (Structured as a Roadmap) ---
+// --- Data: The Narrative Journey ---
 const journeySteps = [
   {
     icon: Quote,
     title: "The Misconception",
     content: "We used to think pitch decks were just about clean slides and good storytelling.",
-    color: "bg-gray-100 text-gray-500",
+    // Indigo Theme
+    activeColors: "bg-indigo-50 text-indigo-600 border-indigo-200",
+    glowColor: "rgba(79, 70, 229, 0.25)", // Reduced opacity for subtler ambience
   },
   {
     icon: AlertCircle,
     title: "The Hard Truth",
     content: "Then we learned the hard way: 49% of decks fail in the first few slides. Investors spend just 2 minutes reading.",
-    color: "bg-red-50 text-red-500",
+    // Red Theme
+    activeColors: "bg-red-50 text-red-600 border-red-200",
+    glowColor: "rgba(220, 38, 38, 0.25)",
   },
   {
     icon: Lightbulb,
     title: "The Realization",
     content: "We realized founders don't need templates. They need a mirror that thinks like a VC and calls out what's missing.",
-    color: "bg-amber-50 text-amber-500",
+    // Amber Theme
+    activeColors: "bg-amber-50 text-amber-600 border-amber-200",
+    glowColor: "rgba(217, 119, 6, 0.25)",
   },
   {
     icon: Rocket,
     title: "The Solution",
     content: "So we built a system that questions like an investor, sharpens your numbers, and turns your story into conviction.",
-    color: "bg-primary/10 text-primary",
+    // Primary Blue Theme
+    activeColors: "bg-blue-50 text-primary border-blue-200",
+    glowColor: "rgba(0, 126, 209, 0.25)",
   },
 ];
+
+// --- Sub-Component: The Animated Icon Node ---
+const StepIcon = ({ step, index, total, scrollYProgress }) => {
+  const [hasActivated, setHasActivated] = useState(false);
+  
+  // Calculate threshold: 0% for first, 100% for last
+  const threshold = index / (total - 1);
+
+  // Monitor scroll progress to trigger "latching" state
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Trigger slightly before the line hits exact center of icon (-0.05 buffer)
+    if (latest >= threshold - 0.05 && !hasActivated) {
+      setHasActivated(true);
+    }
+  });
+
+  return (
+    <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 flex items-center justify-center w-14 h-14 z-20">
+      {/* The Icon Container */}
+      <motion.div 
+        initial="inactive"
+        animate={hasActivated ? "active" : "inactive"}
+        variants={{
+          inactive: {
+            filter: "grayscale(100%)",
+            opacity: 0.9, // 2. Don't fade so much (Increased visibility)
+            scale: 0.9,
+            backgroundColor: "#ffffff",
+            boxShadow: "0px 0px 0px 0px transparent",
+            borderColor: "rgba(255, 255, 255, 1)"
+          },
+          active: {
+            filter: "grayscale(0%)",
+            opacity: 1,
+            scale: 1.1,
+            backgroundColor: "#ffffff",
+            // 1. Reduced ambience: Soft, subtle glow
+            boxShadow: `0px 0px 25px 5px ${step.glowColor}`,
+            borderColor: "rgba(255, 255, 255, 0)" 
+          }
+        }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={`w-14 h-14 rounded-full border-4 flex items-center justify-center ${step.activeColors} border-white`}
+      >
+        <step.icon size={20} fill="currentColor" className="opacity-90" />
+      </motion.div>
+    </div>
+  );
+};
 
 // --- Data: The Founders ---
 const founders = [
@@ -62,6 +119,28 @@ const founders = [
 ];
 
 export default function FoundersCorner() {
+  const containerRef = useRef(null);
+  
+  // Track scroll progress of the roadmap container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 70%", "end 55%"] 
+  });
+
+  // 3. Latching Logic for the Blue Line
+  // We use a MotionValue to store the maximum progress reached so far.
+  const maxScroll = useMotionValue(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Only update if the new value is greater than the current max
+    if (latest > maxScroll.get()) {
+      maxScroll.set(latest);
+    }
+  });
+
+  // Map the MAX progress (not current progress) to line height
+  const lineHeight = useTransform(maxScroll, [0, 1], ["0%", "100%"]);
+
   return (
     <section className="py-32 bg-white relative overflow-hidden" id="founders">
       
@@ -73,8 +152,8 @@ export default function FoundersCorner() {
 
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
         
-        {/* --- PART 1: THE NARRATIVE ROADMAP (Replacing the plain text) --- */}
-        <div className="max-w-3xl mx-auto mb-32">
+        {/* --- PART 1: THE NARRATIVE ROADMAP --- */}
+        <div className="max-w-3xl mx-auto mb-32" ref={containerRef}>
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">
               How We Got Here
@@ -83,8 +162,14 @@ export default function FoundersCorner() {
           </div>
 
           <div className="relative">
-            {/* The Vertical Line */}
-            <div className="absolute left-[28px] top-4 bottom-4 w-0.5 bg-gray-100 rounded-full md:left-1/2 md:-ml-px" />
+            {/* The Vertical Line Track (Gray Background) */}
+            <div className="absolute left-[28px] top-4 bottom-4 w-1 bg-gray-100 rounded-full md:left-1/2 md:-ml-0.5 overflow-hidden">
+              {/* The Filling Line (Blue Foreground) - Driven by maxScroll */}
+              <motion.div 
+                style={{ height: lineHeight }}
+                className="absolute top-0 left-0 w-full bg-primary rounded-full origin-top"
+              />
+            </div>
 
             <div className="space-y-12">
               {journeySteps.map((step, index) => (
@@ -98,12 +183,13 @@ export default function FoundersCorner() {
                     index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                   }`}
                 >
-                  {/* Icon Node (Center) */}
-                  <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 flex items-center justify-center w-14 h-14 rounded-full bg-white border-4 border-white shadow-md z-10">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step.color}`}>
-                      <step.icon size={18} />
-                    </div>
-                  </div>
+                  {/* Icon Node (Scroll Aware & Latching) */}
+                  <StepIcon 
+                    step={step} 
+                    index={index} 
+                    total={journeySteps.length} 
+                    scrollYProgress={scrollYProgress} 
+                  />
 
                   {/* Content Box */}
                   <div className={`ml-20 md:ml-0 md:w-[42%] ${
