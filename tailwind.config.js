@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Add the font family configuration here
+      fontFamily: {
+        sans: ["var(--font-jakarta)", "sans-serif"],
+      },
       colors: {
         primary: {
           DEFAULT: "#007ED1", 

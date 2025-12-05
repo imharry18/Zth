@@ -1,4 +1,4 @@
-import { Hero, Stats, WhyGoToSolution, SlideFlow, FoundersCorner, Contact} from '@/components/sections';
+import { Hero, Stats, WhyGoToSolution, SlideFlow, FoundersCorner} from '@/components/sections';
 
 export default function Home() {
   return (
@@ -8,7 +8,6 @@ export default function Home() {
       <SlideFlow />
       <WhyGoToSolution />
       <FoundersCorner />
-      <Contact /> 
     </div>
   );
 }
