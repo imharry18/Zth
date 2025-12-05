@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       {/* Apply the font variable to the body */}
       <body className={`${jakarta.variable} font-sans antialiased bg-white text-gray-900`}>
         <Navbar />
-        <main className="pt-20"> 
+        <main> 
           {children}
         </main>
         <Footer />

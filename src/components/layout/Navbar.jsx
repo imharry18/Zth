@@ -8,9 +8,9 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Contact", href: "#contact" },
-  { name: "Blog", href: "#blog" },
-  { name: "Consultant", href: "#consultant" },
+  { name: "Consultancy", href: "#consultancy" },
+  { name: "Investor Mockroom", href: "#investor-mockroom" },
+  { name: "Founders Corner", href: "#founders-corner" },
 ];
 
 export default function Navbar() {
@@ -40,7 +40,7 @@ export default function Navbar() {
           layout
           className={`relative flex items-center justify-between transition-all duration-300 ${
             scrolled
-              ? "bg-white/80 backdrop-blur-md shadow-lg border border-white/50 py-3 px-8 rounded-full w-[95%] max-w-[1400px]" // Wider on scroll, stronger blur
+              ? "bg-white/40 backdrop-blur-md shadow-lg border border-white/50 py-3 px-8 rounded-full w-[95%] max-w-[1400px]" // Wider on scroll, stronger blur
               : "bg-transparent py-6 px-6 md:px-12 w-full max-w-[1600px] border-b border-transparent" // Wider initial state
           }`}
         >

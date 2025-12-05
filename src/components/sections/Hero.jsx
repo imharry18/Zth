@@ -1,316 +1,264 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { 
   Sparkles, 
-  BrainCircuit, 
+  Layers, 
   LineChart, 
-  Presentation, 
-  Target,
-  ChevronRight,
-  ArrowRight,
-  AlertCircle,   // Added
-  TrendingUp,    // Added
-  CheckCircle2   // Added
+  BrainCircuit, 
+  ChevronRight, 
+  Play,
+  Zap
 } from "lucide-react";
 import Image from "next/image";
 
-// --- Data: The "Reality" Numbers (Moved from Stats) ---
-const metrics = [
-  {
-    value: "73%",
-    label: "Decks Fail Early",
-    subtext: "Most founders pitch blindly. We fix this with investor-first narratives.",
-    color: "text-red-500",
-    iconBg: "bg-red-500/10",
-    icon: AlertCircle,
-  },
-  {
-    value: "5x",
-    label: "Higher Response",
-    subtext: "Data-backed market sizing increases investor engagement significantly.",
-    color: "text-blue-600",
-    iconBg: "bg-blue-600/10",
-    icon: TrendingUp,
-  },
-  {
-    value: "80%",
-    label: "Conversion Chance",
-    subtext: "Structured flow keeps VCs reading past the first 3 slides.",
-    color: "text-emerald-600",
-    iconBg: "bg-emerald-600/10",
-    icon: CheckCircle2,
-  },
-];
-
-// --- Configuration Data ---
+// --- 1. ZTH STORY CHAPTERS ---
 const slides = [
   {
-    id: "narrative",
-    title: "AI Narrative",
-    headline: "Turn Ideas into Investor-Ready Stories",
-    description: "Don't just pitch. Storytell. Our AI analyzes thousands of successful decks to structure your narrative exactly how VCs want to see it.",
+    id: "identity",
+    category: "What is ZTH?",
+    title: "The AI Co-Pilot for Fundraising",
+    description: "ZTH is an intelligent engine that transforms raw startup ideas into investor-ready narratives. We don't just design slides; we structure your entire business case.",
     icon: Sparkles,
-    color: "bg-blue-500",
-    image: "/deck/slide-1.jpg", 
-    layout: "standard" 
+    color: "bg-blue-600",
+    textColor: "text-blue-600",
+    visualType: "image",
+    visualData: "/deck/slide-1.jpg", 
   },
   {
-    id: "financials",
-    title: "Financials",
-    headline: "Market Sizing & Metrics Made Simple",
-    description: "Complex financial modeling automated. Project your CAC, LTV, and growth metrics without needing a CFO.",
+    id: "service-narrative",
+    category: "Core Service",
+    title: "Investor-Grade Storytelling",
+    description: "Our algorithms analyze thousands of successful decks to restructure your pitch. We ensure you answer the 'Why Now?' and 'Why You?' before the investor even asks.",
+    icon: Layers,
+    color: "bg-indigo-600",
+    textColor: "text-indigo-600",
+    visualType: "image",
+    visualData: "/deck/slide-2.jpg",
+  },
+  {
+    id: "service-financials",
+    category: "Financial Intelligence",
+    title: "Automated Financial Modeling",
+    description: "Forget complex spreadsheets. ZTH projects your CAC, LTV, and runway automatically, presenting financial health in a language VCs trust.",
     icon: LineChart,
-    color: "bg-emerald-500",
-    image: "/deck/slide-2.jpg", 
-    layout: "reversed" 
+    color: "bg-emerald-600",
+    textColor: "text-emerald-600",
+    visualType: "image",
+    visualData: "/deck/slide-3.jpg",
   },
   {
-    id: "qa",
-    title: "VC Simulator",
-    headline: "Practice with a Virtual Investor",
-    description: "Our Smart Engine throws real curveball questions at you before the meeting, so you're never caught off guard.",
+    id: "capability",
+    category: "The Simulator",
+    title: "Virtual VC Due Diligence",
+    description: "ZTH simulates a real investor meeting. Our AI throws curveball questions at your deck to identify gaps before you step into the boardroom.",
     icon: BrainCircuit,
-    color: "bg-purple-500",
-    image: "/deck/slide-3.jpg", 
-    layout: "standard"
-  },
-  {
-    id: "design",
-    title: "Smart Design",
-    headline: "Design That Converts",
-    description: "Forget generic templates. Get slide layouts optimized for readability, flow, and maximum investor retention.",
-    icon: Presentation,
-    color: "bg-indigo-500",
-    image: "/deck/slide-4.jpg", 
-    layout: "reversed"
-  },
-  {
-    id: "analytics",
-    title: "Analytics",
-    headline: "Know Who is Watching",
-    description: "Track open rates, time spent per slide, and investor engagement levels to refine your pitch in real-time.",
-    icon: Target,
-    color: "bg-orange-500",
-    image: "/deck/slide-5.jpg", 
-    layout: "standard"
+    color: "bg-purple-600",
+    textColor: "text-purple-600",
+    visualType: "image",
+    visualData: "/deck/slide-4.jpg",
   }
 ];
 
 export default function Hero() {
+  const containerRef = useRef(null);
   const [current, setCurrent] = useState(0);
 
-  // Auto-Rotation Timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 6000); 
-    return () => clearInterval(timer);
-  }, []);
+  // Track scroll progress within this specific section
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  const isReversed = slides[current].layout === "reversed";
+  // Map scroll progress to slide index (0 to 3)
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // We have 4 slides, so we divide the scroll space into 4 chunks
+    const slideIndex = Math.floor(latest * slides.length);
+    // Clamp between 0 and length-1 to avoid out of bounds
+    const cleanIndex = Math.min(Math.max(slideIndex, 0), slides.length - 1);
+    
+    if (cleanIndex !== current) {
+      setCurrent(cleanIndex);
+    }
+  });
+
+  // Manual Click to Scroll
+  const handleManualChange = (index) => {
+    if (!containerRef.current) return;
+    // Calculate where to scroll to
+    const sectionHeight = containerRef.current.offsetHeight;
+    const scrollPos = containerRef.current.offsetTop + (sectionHeight / slides.length) * index;
+    
+    window.scrollTo({
+      top: scrollPos + 10, // +10 to ensure we land nicely inside the segment
+      behavior: "smooth"
+    });
+  };
 
   return (
-    <section className="relative w-full min-h-[95vh] flex flex-col bg-white pt-28 pb-12 overflow-hidden">
+    // 1. SCROLL CONTAINER (TALL)
+    // height = 400vh (100vh per slide) ensures distinct scroll distance for each
+    <section ref={containerRef} className="relative w-full h-[400vh] bg-white">
       
-      {/* 1. Dynamic "Breathing" Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ 
-            right: isReversed ? "auto" : "-10%", 
-            left: isReversed ? "-10%" : "auto",
-            scale: [1, 1.1, 1], 
-          }}
-          transition={{ 
-            duration: 8, 
-            ease: "easeInOut",
-            repeat: Infinity 
-          }}
-          className="absolute top-[-10%] w-[800px] h-[800px] bg-primary/5 rounded-full blur-[100px] opacity-60" 
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-100/30 rounded-full blur-[120px]" 
-        />
-      </div>
+      {/* 2. STICKY VIEWPORT (The part that stays fixed) */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
+        
+        {/* Background Ambience */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div 
+            key={current}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.25 }}
+            transition={{ duration: 1.5 }}
+            className={`absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full blur-[140px] ${slides[current].color.replace('bg-', 'bg-')}`} 
+          />
+          <div className="absolute bottom-0 right-0 w-[40vw] h-[40vw] bg-gray-100/50 rounded-full blur-[100px]" />
+        </div>
 
-      {/* 2. Main Content Area (Slider) */}
-      <div className="flex-1 flex items-center relative z-10 mb-20">
-        <div className="max-w-[1400px] mx-auto px-6 w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center"
-            >
-              
-              {/* --- Text Column --- */}
-              <div className={`flex flex-col justify-center ${isReversed ? 'lg:order-2 lg:items-end lg:text-right' : 'lg:order-1 lg:items-start lg:text-left'}`}>
+        {/* Main Grid */}
+        <div className="w-full max-w-[1600px] px-6 lg:px-12 grid grid-cols-12 gap-8 items-center h-full relative z-10">
+          
+          {/* --- LEFT: STORY CONTENT (Cols 1-5) --- */}
+          <div className="col-span-12 lg:col-span-5 flex flex-col justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 30 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                {/* Badge */}
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50/80 border border-blue-100/50 backdrop-blur-sm text-primary text-sm font-semibold mb-6 w-fit ${isReversed ? 'flex-row-reverse' : ''}`}
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm mb-6"
                 >
-                  <div className={`p-1.5 rounded-full ${slides[current].color} text-white shadow-lg shadow-blue-500/20`}>
-                    {React.createElement(slides[current].icon, { size: 14 })}
-                  </div>
-                  <span className="tracking-wide text-xs uppercase">{slides[current].title} Engine</span>
+                  <span className={`flex items-center justify-center w-5 h-5 rounded-full ${slides[current].color} text-white`}>
+                    {React.createElement(slides[current].icon, { size: 10 })}
+                  </span>
+                  <span className={`text-xs font-bold uppercase tracking-widest ${slides[current].textColor}`}>
+                    {slides[current].category}
+                  </span>
                 </motion.div>
 
+                {/* Headline */}
                 <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1] mb-6">
-                  {slides[current].headline}
+                  {slides[current].title}
                 </h1>
-
-                <p className="text-xl text-gray-500 max-w-lg leading-relaxed mb-10">
+                
+                {/* Description */}
+                <p className="text-lg lg:text-xl text-gray-500 leading-relaxed mb-8 max-w-lg">
                   {slides[current].description}
                 </p>
 
-                <div className={`flex items-center gap-4 ${isReversed ? 'flex-row-reverse' : 'flex-row'}`}>
-                  <button className="group h-14 px-8 rounded-full bg-primary text-white font-semibold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
-                    Start Creating 
-                    {isReversed ? 
-                      <ChevronRight size={18} className="group-hover:-translate-x-1 transition-transform" /> : 
-                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    }
+                {/* Buttons */}
+                <div className="flex flex-wrap gap-4">
+                  <button className="h-14 px-8 rounded-full bg-primary text-white font-semibold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 hover:-translate-y-0.5 flex items-center gap-2 group">
+                    Start Building 
+                    <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </button>
-                  <button className="h-14 px-8 rounded-full bg-white text-gray-700 border border-gray-200 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm hover:shadow-md">
-                    View Demo
+                  <button className="h-14 w-14 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all shadow-sm group">
+                    <Play size={20} fill="currentColor" className="ml-1 text-gray-400 group-hover:text-primary transition-colors" />
                   </button>
                 </div>
-              </div>
-
-              {/* --- Visual / Image Column --- */}
-              <div className={`relative h-[450px] lg:h-[600px] w-full ${isReversed ? 'lg:order-1' : 'lg:order-2'}`}>
-                <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 bg-gray-900 group perspective-1000">
-                   <Image 
-                      src={slides[current].image}
-                      alt={slides[current].title}
-                      fill
-                      className="object-cover opacity-90 transition-transform duration-[10000ms] ease-linear scale-100 group-hover:scale-110"
-                      priority
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
-                   <motion.div 
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.6 }}
-                      className="absolute bottom-8 left-8 right-8 bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-2xl"
-                    >
-                      <div className="flex items-center gap-4 mb-4">
-                         <div className={`w-10 h-10 rounded-2xl ${slides[current].color} flex items-center justify-center shadow-lg text-white`}>
-                            {React.createElement(slides[current].icon, { size: 20 })}
-                         </div>
-                         <div>
-                            <div className="text-white font-semibold text-lg tracking-tight">AI Analysis Active</div>
-                            <div className="text-white/60 text-xs uppercase tracking-wider font-medium">Processing Data</div>
-                         </div>
-                      </div>
-                      <div className="space-y-3">
-                         <div className="h-2 bg-white/10 rounded-full w-full overflow-hidden">
-                           <motion.div 
-                             initial={{ width: "0%" }}
-                             animate={{ width: "85%" }}
-                             transition={{ delay: 0.5, duration: 1.5, ease: "circOut" }}
-                             className="h-full bg-white/80 rounded-full" 
-                           />
-                         </div>
-                         <div className="h-2 bg-white/10 rounded-full w-2/3 overflow-hidden">
-                           <motion.div 
-                             initial={{ width: "0%" }}
-                             animate={{ width: "60%" }}
-                             transition={{ delay: 0.7, duration: 1.5, ease: "circOut" }}
-                             className="h-full bg-white/60 rounded-full" 
-                           />
-                         </div>
-                      </div>
-                   </motion.div>
-                </div>
-                <div className={`absolute -z-10 top-1/2 -translate-y-1/2 ${isReversed ? '-left-20' : '-right-20'} w-80 h-80 bg-primary/30 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000`} />
-              </div>
-
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* 3. Bottom Navigation - Glass Capsule */}
-      <div className="w-full z-20 mb-24">
-        <div className="max-w-[1000px] mx-auto px-6">
-          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl shadow-black/5 rounded-2xl p-2 flex justify-between items-center overflow-x-auto no-scrollbar gap-2">
-             {slides.map((slide, index) => (
-               <button 
-                  key={index}
-                  onClick={() => setCurrent(index)}
-                  className={`relative group flex-1 min-w-[120px] flex flex-col items-center justify-center gap-2 py-3 px-2 rounded-xl transition-all duration-300 ${
-                    index === current ? 'bg-white shadow-md transform scale-105' : 'hover:bg-white/50'
-                  }`}
-               >
-                  <slide.icon 
-                    size={20} 
-                    className={`transition-colors duration-300 ${index === current ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'}`} 
-                  />
-                  <span className={`text-xs font-bold transition-colors duration-300 ${
-                    index === current ? "text-gray-900" : "text-gray-400 group-hover:text-gray-600"
-                  }`}>
-                    {slide.title}
-                  </span>
-                  {index === current && (
-                    <motion.div 
-                      layoutId="active-tab"
-                      className="absolute inset-0 border-2 border-primary/10 rounded-xl"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
-               </button>
-             ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
-      </div>
 
-      {/* 4. Fundraising Reality Stats (Moved from Stats Section) */}
-      <div className="max-w-[1400px] mx-auto px-6 relative z-10 w-full mt-12">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">
-            The Fundraising <span className="text-primary">Reality</span>
-          </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Numbers don't lie. Most decks fail not because of the idea, but the presentation.
-            We fixed the broken fundraising process.
-          </p>
-        </div>
+          {/* --- CENTER: VISUAL STAGE (Cols 6-10) --- */}
+          <div className="hidden lg:block col-span-6 relative h-[60vh]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.05, y: -20 }}
+                transition={{ duration: 0.6, ease: "circOut" }}
+                className="relative w-full h-full"
+              >
+                {/* The "Card" Container */}
+                <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/50 bg-gray-900 group">
+                  <Image 
+                    src={slides[current].visualData}
+                    alt={slides[current].title}
+                    fill
+                    className="object-cover opacity-90 transition-transform duration-[8s] ease-linear scale-105 group-hover:scale-110"
+                    priority
+                  />
+                  
+                  {/* Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {metrics.map((metric, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative bg-white rounded-[1.5rem] p-6 border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,126,209,0.12)] hover:border-primary/20 transition-all duration-300"
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className={`w-12 h-12 rounded-2xl ${metric.iconBg} ${metric.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <metric.icon size={24} />
+                  {/* Floating Intelligence UI */}
+                  <div className="absolute bottom-8 left-8 right-8">
+                     <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-5 rounded-2xl flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-xl ${slides[current].color} flex items-center justify-center shadow-lg text-white`}>
+                           <Zap size={24} fill="currentColor" />
+                        </div>
+                        <div>
+                           <div className="text-white font-bold text-base">System Active</div>
+                           <div className="text-white/60 text-xs font-medium uppercase tracking-wide">Analyzing Narrative</div>
+                        </div>
+                        <div className="ml-auto text-2xl font-bold text-white">98%</div>
+                     </div>
+                  </div>
                 </div>
-                <h3 className={`text-4xl font-bold ${metric.color} mb-2 tracking-tight`}>
-                  {metric.value}
-                </h3>
-                <p className="text-base font-semibold text-gray-900 mb-2">{metric.label}</p>
-                <p className="text-sm text-gray-500 leading-relaxed px-2">{metric.subtext}</p>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* Decorative Back Glow */}
+                <div className={`absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] ${slides[current].color} rounded-full blur-[100px] opacity-40`} />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* --- RIGHT: GLASS CAPSULE NAVIGATION (Col 12) --- */}
+          <div className="hidden lg:flex col-span-1 h-full items-center justify-end">
+            <div className="bg-white/40 backdrop-blur-xl border border-white/50 shadow-xl shadow-gray-200/50 p-2 rounded-full flex flex-col gap-3">
+              {slides.map((slide, index) => {
+                const isActive = index === current;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleManualChange(index)}
+                    className={`relative group w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                      isActive ? 'bg-white shadow-md scale-110' : 'hover:bg-white/60'
+                    }`}
+                  >
+                    {/* Icon */}
+                    <slide.icon 
+                      size={18} 
+                      className={`transition-colors duration-300 ${
+                        isActive ? slides[index].textColor : 'text-gray-400 group-hover:text-gray-600'
+                      }`} 
+                    />
+
+                    {/* Active Ring Indicator */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-ring"
+                        className={`absolute inset-0 rounded-full border-2 ${slides[index].textColor.replace('text-', 'border-').replace('600', '100')}`}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+
+                    {/* Hover Tooltip (Left Side) */}
+                    <div className="absolute right-14 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                      <div className="bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
+                        {slide.category}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       </div>
-
     </section>
   );
 }
