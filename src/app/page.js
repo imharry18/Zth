@@ -1,5 +1,10 @@
+import React from 'react';
+
+// Import Hero directly because it is a Default Export
+import Hero from '@/components/sections/Hero';
+
+// Import other components from the index (assuming they are named exports or properly re-exported)
 import { 
-  Hero, 
   Stats, 
   SlideFlow, 
   FoundersCorner,
