@@ -6,11 +6,14 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
+// Exact links from MVP Document
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Consultancy", href: "#consultancy" },
-  { name: "Investor Mockroom", href: "#investor-mockroom" },
-  { name: "Founders Corner", href: "#founders-corner" },
+  { name: "Pitch Deck Services", href: "#pitch-deck" },
+  { name: "Investor Mock Room", href: "#mockroom" },
+  { name: "Funding", href: "#funding" },
+  { name: "Consultation", href: "#consultancy" },
+  { name: "Zth Insider", href: "#insider" },
 ];
 
 export default function Navbar() {
@@ -40,8 +43,8 @@ export default function Navbar() {
           layout
           className={`relative flex items-center justify-between transition-all duration-300 ${
             scrolled
-              ? "bg-white/40 backdrop-blur-md shadow-lg border border-white/50 py-3 px-8 rounded-full w-[95%] max-w-[1400px]" // Wider on scroll, stronger blur
-              : "bg-transparent py-6 px-6 md:px-12 w-full max-w-[1600px] border-b border-transparent" // Wider initial state
+              ? "bg-white/40 backdrop-blur-md shadow-lg border border-white/50 py-3 px-8 rounded-full w-[95%] max-w-[1400px]"
+              : "bg-transparent py-6 px-6 md:px-12 w-full max-w-[1600px] border-b border-transparent"
           }`}
         >
           {/* Logo Section */}
@@ -59,13 +62,13 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Center Links - Absolute Center */}
-          <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          {/* Center Links - Absolute Center (Hidden on Mobile) */}
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors relative group"
+                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors relative group whitespace-nowrap"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
@@ -85,7 +88,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-gray-600"
+            className="lg:hidden p-2 text-gray-600"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X /> : <Menu />}
@@ -100,7 +103,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-[90px] z-40 mx-4 bg-white/90 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-2xl md:hidden overflow-hidden"
+            className="fixed inset-x-0 top-[90px] z-40 mx-4 bg-white/90 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-2xl lg:hidden overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-2">
               {navLinks.map((link) => (
