@@ -12,38 +12,52 @@ export default function InvestorMockroom() {
       {/* Background Tech Grid */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] [background-size:40px_40px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-50/50 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
         
-        {/* --- 1. Creative Storytelling Text --- */}
+        {/* --- 1. Creative Storytelling Text (UPDATED FROM DOC) --- */}
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-bold uppercase tracking-widest mb-6 border border-gray-200">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold uppercase tracking-widest mb-6 border border-orange-100">
               <Cpu size={12} />
-              AI Simulation
+              Your Differentiator
             </div>
             
+            {/* Heading from Doc */}
             <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
-              The Investor <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">Mockroom</span>
+              Prepared for the <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Questions That Matter</span>
             </h2>
             
-            <p className="text-xl text-gray-500 leading-relaxed mb-10">
-              Don't practice on your first investor. <br className="hidden md:block" />
-              Train against an AI that knows your industry's skepticism.
+            {/* Subheading from Doc */}
+            <p className="text-xl text-gray-500 leading-relaxed mb-4 font-medium">
+              Simulate real investor conversations before the room decides.
             </p>
+            
+            {/* Text Block content from Doc */}
+            <p className="text-base text-gray-400 mb-10 max-w-2xl mx-auto">
+              Your rehearsal before the real conversation. AI-generated investor questions tailored to your deck, stage, and sector.
+            </p>
+
+            {/* Value Points from Doc (Visualized as tags) */}
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+               {["Simulation of tough scenarios", "Founder readiness scoring", "Tailored to industry", "Conversational training", "De-risk first meeting"].map((tag, i) => (
+                 <span key={i} className="px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-xs font-semibold text-gray-600">{tag}</span>
+               ))}
+            </div>
 
             {/* Navigation Button */}
             <Link 
               href="/mockroom" 
               className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 group"
             >
-              <span>Enter Mockroom</span>
+              <span>Try the Mock Room</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -52,7 +66,7 @@ export default function InvestorMockroom() {
         {/* --- 2. The Visual "Live Session" Demo --- */}
         <div className="relative max-w-5xl mx-auto">
           
-          {/* Floating AI Analysis Cards (The "Creative Telling") */}
+          {/* Floating AI Analysis Cards (Unchanged as they match intent) */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -150,7 +164,7 @@ export default function InvestorMockroom() {
               <div className="md:col-span-2">
                 <div className="relative h-64 bg-gray-900/50 rounded-3xl border border-white/5 flex items-center justify-center overflow-hidden">
                    {/* Gradient Blob */}
-                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-purple-500/10 to-transparent opacity-50" />
+                   <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-red-500/10 to-transparent opacity-50" />
                    
                    {/* Animated Bars */}
                    <div className="relative z-10 flex items-end justify-center gap-1.5 h-32 w-full px-8">
@@ -159,7 +173,7 @@ export default function InvestorMockroom() {
                           key={i}
                           animate={{ 
                             height: ["20%", "80%", "30%", "60%", "20%"],
-                            backgroundColor: ["#3b82f6", "#60a5fa", "#3b82f6"]
+                            backgroundColor: ["#f97316", "#fb923c", "#f97316"]
                           }}
                           transition={{ 
                             duration: 1.5, 
@@ -168,7 +182,7 @@ export default function InvestorMockroom() {
                             delay: i * 0.05,
                             repeatType: "mirror"
                           }}
-                          className="w-3 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                          className="w-3 rounded-full bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.5)]"
                         />
                       ))}
                    </div>
