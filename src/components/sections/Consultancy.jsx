@@ -1,41 +1,41 @@
 "use client";
 
 import React from "react";
-import Link from "next/link"; // Import Link for navigation
+import Link from "next/link"; 
 import { motion } from "framer-motion";
 import { Users, TrendingUp, ShieldCheck, ArrowRight, CheckCircle2, Star } from "lucide-react";
 
-// --- Data ---
+// --- Data (Services matched to Doc) ---
 const services = [
   {
-    title: "Strategic Narrative",
-    description: "We don't just edit slides. We deconstruct your business model and rebuild your story to align with VC thesis.",
+    title: "Narrative Refinement",
+    description: "Positioning for the next round. Rebuild your story to align with VC thesis for Series A and beyond.",
     icon: Users,
-    colSpan: "md:col-span-2", // Wide card
+    colSpan: "md:col-span-2", 
     bg: "bg-blue-50",
     text: "text-blue-600"
   },
   {
-    title: "Financial Rigor",
+    title: "Financial Story Clarity",
     description: "Bulletproof financial modeling that survives the deepest due diligence.",
     icon: TrendingUp,
-    colSpan: "md:col-span-1", // Square card
+    colSpan: "md:col-span-1", 
     bg: "bg-emerald-50",
     text: "text-emerald-600"
   },
   {
-    title: "Deal Advisory",
-    description: "Guidance on valuation, term sheets, and equity structuring.",
+    title: "Go-To-Market Direction",
+    description: "Post-funding strategy to aspire and market growth. Product-market storytelling.",
     icon: ShieldCheck,
-    colSpan: "md:col-span-1", // Square card
+    colSpan: "md:col-span-1", 
     bg: "bg-purple-50",
     text: "text-purple-600"
   },
   {
-    title: "Pitch Coaching",
+    title: "Investor Comm Prep",
     description: "Mock boardroom sessions to perfect your delivery and Q&A handling.",
     icon: Star,
-    colSpan: "md:col-span-2", // Wide card
+    colSpan: "md:col-span-2", 
     bg: "bg-amber-50",
     text: "text-amber-600"
   },
@@ -55,7 +55,6 @@ export default function Consultancy() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           
           {/* --- LEFT: The Pitch --- */}
-          {/* Changed sticky top value to align better visually with the top of the cards */}
           <div className="sticky top-24 pt-8 lg:pt-0"> 
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -67,20 +66,21 @@ export default function Consultancy() {
                 Human Intelligence
               </div>
               
+              {/* HEADLINE MATCHING DOC */}
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                When Software <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500">Isn't Enough.</span>
+                Consultation <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500">(Post-Funding Strategy)</span>
               </h2>
               
               <p className="text-lg text-gray-500 mb-8 leading-relaxed">
-                Sometimes you need a partner, not just a platform. Our consultancy arm pairs you with ex-founders and finance experts who get in the trenches with you.
+                Also a small band with our integrated Companies. Let it aspire and market Growth.
               </p>
 
               <ul className="space-y-4 mb-10">
                 {[
-                  "1-on-1 Deep Dive Sessions",
-                  "Verified Financial Models",
-                  "Direct Introduction Network"
+                  "Narrative refinement",
+                  "Positioning for next round",
+                  "Product-market storytelling"
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-gray-700 font-medium">
                     <CheckCircle2 className="text-primary w-5 h-5" />
@@ -94,14 +94,13 @@ export default function Consultancy() {
                 href="/consultancy" 
                 className="group inline-flex items-center gap-3 bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-2xl font-semibold transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
               >
-                <span>Book a Strategy Call</span>
+                <span>Book a Consultation</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           </div>
 
           {/* --- RIGHT: The Services Bento Grid --- */}
-          {/* Added pt-2 to push cards down slightly if needed, but flex-col alignment usually handles this */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             {services.map((service, index) => (
               <motion.div
@@ -130,27 +129,6 @@ export default function Consultancy() {
                 </div>
               </motion.div>
             ))}
-            
-            {/* Social Proof Mini-Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="md:col-span-2 bg-gradient-to-r from-gray-900 to-gray-800 rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl"
-            >
-              <div>
-                <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Impact</div>
-                <div className="text-3xl font-bold text-white">$50M+</div>
-                <div className="text-white/80 text-sm">Capital raised by our clients</div>
-              </div>
-              <div className="h-full w-px bg-white/10 hidden md:block" />
-              <div>
-                <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Success Rate</div>
-                <div className="text-3xl font-bold text-white">92%</div>
-                <div className="text-white/80 text-sm">Seed to Series A conversion</div>
-              </div>
-            </motion.div>
           </div>
 
         </div>
