@@ -11,11 +11,14 @@ import {
   ArrowRight,
   Play,
   Pause,
-  ChevronDown
+  ChevronDown,
+  Activity,
+  BarChart3,
+  Wifi,
+  Mic
 } from "lucide-react";
-import Image from "next/image";
 
-// --- 1. CONTENT CONFIGURATION ---
+// --- 1. CONTENT CONFIGURATION (Exact from Doc) ---
 const slides = [
   {
     id: "pitch-deck",
@@ -24,10 +27,17 @@ const slides = [
     description: "The foundation of every raise. Narratives crafted with strategy, research, and investor insight—no templates, just winning stories.",
     subline: "500+ decks delivered • $2B+ combined raises",
     icon: PenTool,
-    visual: "/hero/1.jpg", 
     cta: "Build My Deck",
     accent: "blue",     
-    hex: "#3b82f6"      
+    hex: "#3b82f6",
+    // Dynamic Dashboard Data for this slide
+    dashData: {
+      leftLabel: "NARRATIVE SCORE",
+      leftValue: "98/100 (Excellent)",
+      mainText: "\"The problem slide creates immediate urgency. The solution feels inevitable.\"",
+      rightLabel: "FUNDING PROBABILITY",
+      rightValue: "High"
+    }
   },
   {
     id: "smart-engine",
@@ -36,10 +46,16 @@ const slides = [
     description: "Smart Deck Engine — Launching Soon. AI-driven storytelling with structure, logic, and clarity built in automatically.",
     subline: "Vision → Problem → Solution → Market logic generated instantly.",
     icon: Sparkles,
-    visual: "/hero/2.jpg",
     cta: "Join Waitlist",
     accent: "purple",
-    hex: "#a855f7"
+    hex: "#a855f7",
+    dashData: {
+      leftLabel: "LOGIC FLOW",
+      leftValue: "Optimized",
+      mainText: "\"Generating market sizing based on Series A benchmarks for Fintech...\"",
+      rightLabel: "GENERATION SPEED",
+      rightValue: "12s"
+    }
   },
   {
     id: "mock-room",
@@ -48,10 +64,16 @@ const slides = [
     description: "Before the room decides. Simulate real investor conversations and de-risk your first meeting with AI-generated scenarios.",
     subline: "Your rehearsal before the real conversation.",
     icon: MessageSquare,
-    visual: "/hero/3.jpg",
     cta: "Try Mock Room",
     accent: "orange",
-    hex: "#f97316"
+    hex: "#f97316",
+    dashData: {
+      leftLabel: "SPEECH PACE",
+      leftValue: "140 wpm (Optimal)",
+      mainText: "\"Your CAC seems low for this market. How does it scale when you saturate early adopters?\"",
+      rightLabel: "CONFIDENCE SCORE",
+      rightValue: "92/100"
+    }
   },
   {
     id: "funding",
@@ -60,10 +82,16 @@ const slides = [
     description: "For founders building enduring companies. Qualified founders introduced to curated investors based on stage and sector.",
     subline: "Warm intros, not spam lists.",
     icon: TrendingUp,
-    visual: "/hero/4.jpg",
     cta: "Explore Pathways",
     accent: "emerald",
-    hex: "#10b981"
+    hex: "#10b981",
+    dashData: {
+      leftLabel: "INVESTOR MATCH",
+      leftValue: "5 Funds Found",
+      mainText: "\"Connecting with Tier-1 VC partners aligned with your sector thesis...\"",
+      rightLabel: "INTRO WARMTH",
+      rightValue: "Direct"
+    }
   },
   {
     id: "consultation",
@@ -72,14 +100,20 @@ const slides = [
     description: "Narrative refinement, product-market storytelling, and go-to-market direction for your next growth phase.",
     subline: "Let it aspire and market Growth.",
     icon: Briefcase,
-    visual: "/hero/5.jpg",
     cta: "Book Consultation",
     accent: "gray",
-    hex: "#6b7280"
+    hex: "#6b7280",
+    dashData: {
+      leftLabel: "STRATEGY CHECK",
+      leftValue: "In Progress",
+      mainText: "\"Refining Go-To-Market strategy for Q3 expansion...\"",
+      rightLabel: "READINESS",
+      rightValue: "Verified"
+    }
   }
 ];
 
-// --- 2. SUB-COMPONENTS (Defined Outside for Stability) ---
+// --- 2. SUB-COMPONENTS ---
 
 // A. Circular Progress Timer
 const ProgressRing = ({ isPlaying, duration, onComplete, resetKey, onClick }) => {
@@ -157,9 +191,124 @@ const TiltCard = ({ children }) => {
   );
 };
 
-// C. Text Block
+// C. NEW: Dashboard Animation Visual (Replaces Static Image)
+const DashboardVisual = ({ slide }) => {
+  const data = slide.dashData;
+
+  return (
+    <div className="relative w-full h-full bg-[#0F1115] p-6 flex flex-col justify-between overflow-hidden">
+        {/* Top Bar */}
+        <div className="flex justify-between items-center mb-8 opacity-60">
+            <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"/>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"/>
+                <div className="w-3 h-3 rounded-full bg-green-500"/>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-mono text-white tracking-widest uppercase">
+                <Wifi size={10} />
+                LIVE_CONNECTION
+            </div>
+            <div className="text-[10px] font-mono text-white tracking-widest uppercase">ZTH_ENGINE_V2.0</div>
+        </div>
+
+        {/* Center Content Area */}
+        <div className="relative z-10 flex flex-col justify-center h-full">
+            
+            {/* 1. Floating Widget Left (Speech Pace style) */}
+            <motion.div 
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                key={`left-${slide.id}`}
+                transition={{ delay: 0.2 }}
+                className="absolute top-0 -left-2 bg-white rounded-xl p-3 shadow-lg flex items-center gap-3 z-20 max-w-[200px]"
+            >
+                <div className={`w-8 h-8 rounded-full bg-${slide.accent}-100 flex items-center justify-center text-${slide.accent}-600`}>
+                    <Activity size={16} />
+                </div>
+                <div>
+                    <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{data.leftLabel}</div>
+                    <div className="text-xs font-bold text-gray-900">{data.leftValue}</div>
+                </div>
+            </motion.div>
+
+            {/* 2. Main Question/Text */}
+            <motion.div 
+                key={`text-${slide.id}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="text-white text-2xl md:text-3xl font-medium leading-tight px-4 py-12"
+            >
+                {data.mainText}
+            </motion.div>
+
+            {/* 3. Floating Widget Right (Confidence Score style) */}
+            <motion.div 
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                key={`right-${slide.id}`}
+                transition={{ delay: 0.3 }}
+                className="absolute bottom-12 -right-2 bg-white rounded-xl p-3 shadow-lg flex items-center gap-3 z-20 max-w-[220px]"
+            >
+                <div className={`w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600`}>
+                    <BarChart3 size={16} />
+                </div>
+                <div>
+                    <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{data.rightLabel}</div>
+                    <div className="text-xs font-bold text-gray-900">{data.rightValue}</div>
+                </div>
+            </motion.div>
+
+            {/* 4. Background Waveform (Visual Flair) */}
+            <div className="absolute right-0 bottom-24 w-48 h-32 opacity-20 pointer-events-none">
+                 <div className="flex items-end justify-between h-full gap-1">
+                    {[...Array(12)].map((_, i) => (
+                        <motion.div 
+                           key={i}
+                           animate={{ height: ["20%", "100%", "40%"] }}
+                           transition={{ duration: 1.5, repeat: Infinity, repeatType: "mirror", delay: i * 0.1 }}
+                           className={`w-full rounded-t-sm bg-${slide.accent}-500`}
+                        />
+                    ))}
+                 </div>
+            </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex items-center gap-4 mt-auto">
+             <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-white/90 text-xs font-medium">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+                Processing...
+             </div>
+             <div className="text-white/30 text-xs font-mono">00:42 / 02:00</div>
+        </div>
+    </div>
+  );
+};
+
+// D. Visual Block Container
+const VisualBlock = ({ slide }) => {
+  if (!slide) return null;
+
+  return (
+    <TiltCard>
+      <motion.div 
+         initial={{ scale: 0.95, opacity: 0, filter: "blur(10px)" }} 
+         animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }} 
+         transition={{ duration: 0.8, ease: "circOut" }}
+         className="relative w-full aspect-video lg:aspect-[4/3] max-h-[550px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/50 bg-gray-50"
+      >
+        <DashboardVisual slide={slide} />
+      </motion.div>
+    </TiltCard>
+  );
+};
+
+// E. Text Block
 const TextBlock = ({ slide, isPlaying, onTogglePlay, onTimerComplete, timerKey }) => {
-  // Safe guard in case slide is undefined
   if (!slide) return null;
 
   return (
@@ -215,42 +364,6 @@ const TextBlock = ({ slide, isPlaying, onTogglePlay, onTimerComplete, timerKey }
         />
       </motion.div>
     </div>
-  );
-};
-
-// D. Visual Block
-const VisualBlock = ({ slide }) => {
-  // Safe guard
-  if (!slide) return null;
-
-  return (
-    <TiltCard>
-      <motion.div 
-         initial={{ scale: 0.95, opacity: 0, filter: "blur(10px)" }} 
-         animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }} 
-         transition={{ duration: 0.8, ease: "circOut" }}
-         className="relative w-full aspect-video lg:aspect-[4/3] max-h-[550px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/50 bg-gray-50"
-      >
-        {/* Using a standard img tag with error handling can be safer if Next Image causes issues, 
-            but keeping Next Image with a valid path check is better */}
-        <Image 
-          src={slide.visual} 
-          alt={slide.title} 
-          fill 
-          className="object-cover transition-transform duration-[10s] hover:scale-110" 
-          priority 
-        />
-        
-        {/* Soft Gradient Overlay (Cinematic) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60 pointer-events-none" />
-        
-        {/* Floating Tag */}
-        <div className="absolute bottom-8 left-8 bg-white/30 backdrop-blur-xl border border-white/40 px-4 py-2 rounded-full flex items-center gap-2 shadow-lg z-10">
-           <div className={`w-2 h-2 rounded-full bg-${slide.accent}-400 animate-pulse`} />
-           <span className="text-white text-xs font-bold uppercase tracking-wide">Live Preview</span>
-        </div>
-      </motion.div>
-    </TiltCard>
   );
 };
 
@@ -326,8 +439,7 @@ export default function Hero() {
       className="relative w-full h-screen overflow-hidden bg-white flex items-center justify-center pt-32"
     >
       
-      {/* --- A. THE "AURA" BACKGROUND (Replaces Linear Gradients) --- */}
-      {/* This creates a soft, breathing color blob in the center */}
+      {/* --- A. THE "AURA" BACKGROUND --- */}
       <AnimatePresence mode="wait">
         <motion.div 
             key={`bg-${current}`}
