@@ -10,55 +10,51 @@ import {
   ArrowRight
 } from "lucide-react";
 
-// --- Data: Richer Feature Set with Color Themes ---
+// --- Data: Equal Sized Features ---
 const features = [
   {
     title: "AI VC Question Engine",
     description: "Simulate real investor Q&A. Prepare VC-style responses before you even step into the room.",
     icon: BrainCircuit,
-    className: "md:col-span-2 lg:col-span-2", 
     color: "text-purple-600",
     bg: "bg-purple-50",
     border: "group-hover:border-purple-200",
     shadow: "group-hover:shadow-purple-500/10",
     gradient: "from-purple-500/5 to-transparent",
-    glow: "rgba(168, 85, 247, 0.15)" // Purple Glow
-  },
-  {
-    title: "KPIs & Benchmarks",
-    description: "Populate slides with startup KPIs and industry benchmarks.",
-    icon: BarChart3,
-    className: "md:col-span-1 lg:col-span-1",
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-    border: "group-hover:border-emerald-200",
-    shadow: "group-hover:shadow-emerald-500/10",
-    gradient: "from-emerald-500/5 to-transparent",
-    glow: "rgba(16, 185, 129, 0.15)" // Emerald Glow
-  },
-  {
-    title: "Founder-Tested",
-    description: "Developed from hands-on fundraising journeys and real feedback.",
-    icon: Users,
-    className: "md:col-span-1 lg:col-span-1",
-    color: "text-orange-600",
-    bg: "bg-orange-50",
-    border: "group-hover:border-orange-200",
-    shadow: "group-hover:shadow-orange-500/10",
-    gradient: "from-orange-500/5 to-transparent",
-    glow: "rgba(249, 115, 22, 0.15)" // Orange Glow
+    glow: "rgba(168, 85, 247, 0.15)"
   },
   {
     title: "Investor-First Flow",
-    description: "A pitch structure engineered to convert attention into interest using VC logic.",
+    description: "A pitch structure engineered to convert attention into interest using proven VC logic.",
     icon: Layers,
-    className: "md:col-span-2 lg:col-span-2",
     color: "text-blue-600",
     bg: "bg-blue-50",
     border: "group-hover:border-blue-200",
     shadow: "group-hover:shadow-blue-500/10",
     gradient: "from-blue-500/5 to-transparent",
-    glow: "rgba(59, 130, 246, 0.15)" // Blue Glow
+    glow: "rgba(59, 130, 246, 0.15)"
+  },
+  {
+    title: "KPIs & Benchmarks",
+    description: "Populate slides with startup KPIs and industry benchmarks instantly.",
+    icon: BarChart3,
+    color: "text-emerald-600",
+    bg: "bg-emerald-50",
+    border: "group-hover:border-emerald-200",
+    shadow: "group-hover:shadow-emerald-500/10",
+    gradient: "from-emerald-500/5 to-transparent",
+    glow: "rgba(16, 185, 129, 0.15)"
+  },
+  {
+    title: "Founder-Tested",
+    description: "Developed from hands-on fundraising journeys and real feedback.",
+    icon: Users,
+    color: "text-orange-600",
+    bg: "bg-orange-50",
+    border: "group-hover:border-orange-200",
+    shadow: "group-hover:shadow-orange-500/10",
+    gradient: "from-orange-500/5 to-transparent",
+    glow: "rgba(249, 115, 22, 0.15)"
   },
 ];
 
@@ -99,7 +95,7 @@ const SpotlightCard = ({ children, className = "", glowColor = "rgba(0, 126, 209
 
 export default function Stats() {
   return (
-    <section className="py-32 bg-white relative overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center py-20 bg-white overflow-hidden">
       
       {/* --- 1. Colorful Ambient Background --- */}
       <div className="absolute inset-0 pointer-events-none">
@@ -108,30 +104,30 @@ export default function Stats() {
          
          {/* Colorful Orbs */}
          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-50/50 rounded-full blur-[120px] opacity-60" />
-         <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-purple-50/40 rounded-full blur-[100px] opacity-50" />
+         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-50/40 rounded-full blur-[100px] opacity-50" />
          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-emerald-50/40 rounded-full blur-[100px] opacity-50" />
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         
         {/* --- Header --- */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
-           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">
+           <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6">
             Why Founders Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">ZTH</span>
           </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
             Experience the difference of an intelligent engine built to <br className="hidden md:block" />
             convert investors, not just impress them.
           </p>
         </motion.div>
 
-        {/* --- Feature Bento Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* --- Feature Grid (Symmetrical 2x2) --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -139,27 +135,27 @@ export default function Stats() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={feature.className}
+              className="h-full"
             >
               <SpotlightCard 
-                className={`h-full group ${feature.border} hover:shadow-xl ${feature.shadow}`}
+                className={`h-full group ${feature.border} hover:shadow-2xl hover:-translate-y-1 ${feature.shadow}`}
                 glowColor={feature.glow}
               >
                 {/* Internal Gradient Splash */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
-                <div className="relative p-10 flex flex-col justify-between h-full">
+                <div className="relative p-10 flex flex-col justify-between h-full min-h-[320px]">
                   <div>
                     {/* Icon Box */}
                     <div className={`mb-8 inline-flex h-16 w-16 items-center justify-center rounded-2xl ${feature.bg} ${feature.color} transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-sm`}>
                       <feature.icon className="h-8 w-8" />
                     </div>
                     
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-gray-900 transition-colors">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors">
                       {feature.title}
                     </h3>
                     
-                    <p className="text-gray-500 leading-relaxed text-base group-hover:text-gray-600 transition-colors">
+                    <p className="text-gray-500 leading-relaxed text-lg group-hover:text-gray-600 transition-colors">
                       {feature.description}
                     </p>
                   </div>
