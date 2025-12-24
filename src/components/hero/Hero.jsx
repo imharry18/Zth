@@ -3,11 +3,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-
-// Absolute imports - works from anywhere in the app
-import { slides } from "@/components/hero/data";
-import VisualBlock from "@/components/hero/VisualBlock";
-import TextBlock from "@/components/hero/TextBlock";
+import { slides } from "../hero/data";
+import VisualBlock from "../hero/VisualBlock";
+import TextBlock from "../hero/TextBlock";
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
@@ -43,6 +41,7 @@ export default function Hero() {
     };
   }, [isAutoPlaying]);
 
+  // Scroll Trap for Sliders
   useEffect(() => {
     const handleWheel = (e) => {
       if (window.scrollY < 10) {

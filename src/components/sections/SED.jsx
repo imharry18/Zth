@@ -114,8 +114,8 @@ export default function SED() {
                     initial={{ x: "-100%" }}
                     animate={{ x: hoveredIndex === index ? "0%" : "-100%" }}
                     transition={{ duration: 0.5, ease: "circOut" }}
-                    className={`h-full w-full ${feature.bg.replace('bg-', 'bg-slate-900')}`} // Fallback to dark if needed, or specific color
-                    style={{ backgroundColor: 'currentColor', color: 'var(--tw-text-opacity)' }} // Simple hack for color
+                    className={`h-full w-full ${feature.bg.replace('bg-', 'bg-slate-900')}`} 
+                    style={{ backgroundColor: 'currentColor', color: 'var(--tw-text-opacity)' }}
                   />
                   <div className={`h-full w-full ${feature.color} bg-current opacity-20`} />
                 </div>
@@ -144,11 +144,12 @@ export default function SED() {
                 Join the waitlist for early access to the engine.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+              {/* UPDATED: Increased max-w-lg and added sm:flex-1 to input */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-lg mx-auto">
                 <input 
                   type="email" 
                   placeholder="Enter your email address" 
-                  className="w-full bg-white/10 border border-white/10 text-white placeholder:text-gray-500 px-5 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:bg-white/20 transition-all backdrop-blur-sm"
+                  className="w-full sm:flex-1 bg-white/10 border border-white/10 text-white placeholder:text-gray-500 px-5 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:bg-white/20 transition-all backdrop-blur-sm"
                 />
                 <button className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white px-8 py-3.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/40 group">
                   <Bell size={18} />

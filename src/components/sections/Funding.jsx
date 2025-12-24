@@ -1,148 +1,215 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Network, ShieldCheck, Handshake, ArrowRight } from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Globe, Shield, Zap, TrendingUp, Lock, CheckCircle2, Network, Handshake } from "lucide-react";
 
-const benefits = [
-  {
-    title: "Warm intros, not spam lists",
-    description: "Skip the cold emails. We introduce you to partners who are actively looking for deals in your sector.",
-    icon: Network,
-  },
-  {
-    title: "Only post-review of pitch deck",
-    description: "We ensure you are ready before we send. This protects your reputation and keeps our investor signal high.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Strong founder fit > volume",
-    description: "We don't blast your deck. We match you with investors where there is genuine thesis alignment.",
-    icon: Handshake,
-  },
-];
+// --- VISUAL: The "Synergy Engine" Animation ---
+const SynergyEngine = () => {
+  return (
+    <div className="relative w-full h-[500px] flex items-center justify-center select-none">
+      
+      {/* 1. Atmospheric Glows (The "Cinematic" Base) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-blue-100/30 via-purple-100/30 to-pink-100/30 blur-[80px] rounded-full pointer-events-none" />
+
+      {/* 2. The Central Connection (Data Flow) */}
+      <div className="relative z-10 w-full max-w-lg">
+        {/* Animated Connecting Line */}
+        <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 -translate-y-1/2 overflow-hidden rounded-full">
+           <motion.div 
+             className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-transparent via-pink-500 to-transparent blur-[1px]"
+             animate={{ x: ["-100%", "300%"] }}
+             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+           />
+           <motion.div 
+             className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-transparent via-blue-500 to-transparent blur-[1px]"
+             animate={{ x: ["-100%", "300%"] }}
+             transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: 1 }}
+           />
+        </div>
+
+        {/* 3. The Nodes (Zth & 14U) */}
+        <div className="flex justify-between items-center relative">
+           
+           {/* LEFT NODE: Zth (Intelligence) */}
+           <motion.div 
+             initial={{ scale: 0.8, opacity: 0 }}
+             whileInView={{ scale: 1, opacity: 1 }}
+             transition={{ duration: 0.8 }}
+             className="relative group"
+           >
+              <div className="w-24 h-24 bg-white rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-blue-100 flex items-center justify-center z-20 relative transition-transform duration-500 group-hover:scale-105">
+                 <div className="text-center">
+                    <span className="block text-2xl font-bold text-gray-900 tracking-tight">Zth</span>
+                    <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest">Intelligence</span>
+                 </div>
+              </div>
+              {/* Pulse Ring */}
+              <div className="absolute inset-0 border border-blue-100 rounded-2xl scale-125 opacity-0 group-hover:scale-150 group-hover:opacity-100 transition-all duration-700" />
+           </motion.div>
+
+           {/* CENTER BADGE: The Partnership */}
+           <motion.div 
+             initial={{ y: 20, opacity: 0 }}
+             whileInView={{ y: 0, opacity: 1 }}
+             transition={{ delay: 0.3 }}
+             className="relative z-30 bg-white px-6 py-2 rounded-full border border-gray-100 shadow-xl flex items-center gap-2"
+           >
+              <Shield size={14} className="text-gray-400" />
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Vetted Pipeline</span>
+           </motion.div>
+
+           {/* RIGHT NODE: 14U (Capital) - The Pink Star */}
+           <motion.div 
+             initial={{ scale: 0.8, opacity: 0 }}
+             whileInView={{ scale: 1, opacity: 1 }}
+             transition={{ duration: 0.8 }}
+             className="relative group"
+           >
+              <div className="w-28 h-28 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full shadow-[0_20px_60px_-12px_rgba(236,72,153,0.4)] flex items-center justify-center z-20 relative text-white transition-transform duration-500 group-hover:scale-105">
+                 <div className="text-center">
+                    <span className="block text-3xl font-bold tracking-tighter">14U</span>
+                    <span className="text-[10px] font-bold text-pink-100/80 uppercase tracking-widest">Capital</span>
+                 </div>
+              </div>
+              {/* Pink Atmospheric Pulse */}
+              <motion.div 
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 bg-pink-500 blur-2xl rounded-full -z-10"
+              />
+           </motion.div>
+
+        </div>
+      </div>
+
+      {/* 4. Floating "Success Events" (Glassmorphism) - FIXED DATA */}
+      {/* Replaced random numbers with actual value propositions from your doc */}
+      {[
+        { icon: Handshake, label: "Introduction", val: "Warm & Direct", x: -160, y: -80, delay: 0.5 },
+        { icon: Lock, label: "Access", val: "Post-Review", x: 180, y: 60, delay: 0.7 },
+        { icon: CheckCircle2, label: "Alignment", val: "Founder Fit", x: 140, y: -100, delay: 0.9 },
+      ].map((card, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: card.delay, duration: 0.6 }}
+          animate={{ y: [0, -15, 0] }}
+          // Animation: Slow hover float
+          className="absolute bg-white/70 backdrop-blur-md border border-white/50 p-4 rounded-2xl shadow-lg flex items-center gap-3 z-10"
+          style={{ transform: `translate(${card.x}px, ${card.y}px)`, transition: "transform 4s ease-in-out infinite" }}
+        >
+           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-50 to-white border border-gray-100 flex items-center justify-center text-pink-500 shadow-sm">
+              <card.icon size={18} />
+           </div>
+           <div>
+              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{card.label}</div>
+              <div className="text-sm font-bold text-gray-900">{card.val}</div>
+           </div>
+        </motion.div>
+      ))}
+
+    </div>
+  );
+};
 
 export default function Funding() {
+  const containerRef = useRef(null);
+
+  // Data
+  const features = [
+    "Warm Intros, No Cold Emails",
+    "Pre-Vetted Deal Flow",
+    "Partners, Not Just LPs"
+  ];
+
   return (
-    <section className="py-32 bg-gray-50 relative overflow-hidden" id="funding">
+    <section 
+      ref={containerRef} 
+      className="relative h-screen w-full bg-white overflow-hidden flex items-center justify-center snap-center" 
+      id="funding"
+    >
       
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute top-1/2 right-0 w-[600px] h-[600px] bg-emerald-100/50 rounded-full blur-[100px] pointer-events-none" />
+      {/* 1. Cinematic Background (Subtle Texture) */}
+      <div className="absolute inset-0 pointer-events-none">
+         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+         <div className="absolute top-0 right-0 w-[50vw] h-full bg-gradient-to-l from-pink-50/40 via-transparent to-transparent" />
+      </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Left: Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-widest mb-6 border border-emerald-200">
-              <Network size={12} />
-              Strategic Network
-            </div>
+      {/* 2. Main Layout */}
+      <div className="container mx-auto px-6 lg:px-12 h-full flex flex-col justify-center relative z-20">
+        <div className="grid lg:grid-cols-12 gap-12 items-center h-full">
+           
+           {/* LEFT: Copy & Strategy (5 Cols) */}
+           <motion.div 
+             initial={{ opacity: 0, x: -30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.8, ease: "easeOut" }}
+             className="lg:col-span-5 flex flex-col justify-center"
+           >
+              {/* Badge */}
+              <div className="inline-flex self-start items-center gap-2 px-3 py-1.5 rounded-full bg-pink-50 border border-pink-100/50 text-pink-600 text-[10px] font-bold uppercase tracking-widest mb-8">
+                <Network size={12} fill="currentColor" className="opacity-50" />
+                Strategic Access
+              </div>
+              
+              {/* Headline */}
+              <h2 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight mb-8">
+                Beyond <br/> the Raise. <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">
+                  Zth × 14U
+                </span>
+              </h2>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Zth × 14U Capital
-            </h2>
-            
-            <p className="text-xl text-gray-500 mb-8 leading-relaxed">
-              Qualified founders introduced to curated investors based on stage and sector. <br/>
-              <span className="font-semibold text-emerald-600">Discreet, credible partnership.</span>
-            </p>
+              {/* Subtext */}
+              <p className="text-xl text-gray-500 font-light leading-relaxed mb-10 border-l-2 border-pink-100 pl-6">
+                We facilitate introductions to a curated network of strategic investors. 
+                <span className="block mt-2 font-medium text-gray-900">
+                  Qualified founders. Direct Access.
+                </span>
+              </p>
 
-            <div className="space-y-6 mb-10">
-              {benefits.map((item, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                      <item.icon size={16} />
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-sm">{item.title}</h4>
-                    <p className="text-gray-500 text-sm mt-1">{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+              {/* Checkmarks */}
+              <ul className="space-y-4 mb-10">
+                {features.map((text, i) => (
+                  <motion.li 
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + (i * 0.1) }}
+                    className="flex items-center gap-3 text-gray-700 font-medium"
+                  >
+                    <CheckCircle2 size={18} className="text-pink-500" />
+                    {text}
+                  </motion.li>
+                ))}
+              </ul>
 
-            <button className="group inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-              <span>Explore Funding Pathways</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </motion.div>
+              {/* CTA */}
+              <div>
+                 <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-sm overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-pink-500/20 hover:-translate-y-1 transition-all">
+                    <span className="relative z-10">Explore Funding Pathways</span>
+                    <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                 </button>
+              </div>
+           </motion.div>
 
-          {/* Right: Visual Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="relative aspect-[4/5] md:aspect-square bg-gradient-to-br from-gray-900 to-gray-800 rounded-[2.5rem] p-8 md:p-12 flex flex-col justify-between shadow-2xl overflow-hidden border border-gray-700">
-               {/* Abstract Grid Map */}
-               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
-               
-               {/* Connecting Lines Animation */}
-               <div className="absolute inset-0">
-                  <svg className="w-full h-full opacity-30">
-                    <motion.path 
-                      d="M 50 300 Q 200 100 350 300" 
-                      fill="none" 
-                      stroke="url(#gradient)" 
-                      strokeWidth="2"
-                      strokeDasharray="10 10"
-                      animate={{ strokeDashoffset: [0, 100] }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    />
-                    <defs>
-                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity="0" />
-                        <stop offset="50%" stopColor="#10b981" stopOpacity="1" />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-               </div>
-
-               <div className="relative z-10">
-                 <div className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-2xl inline-block mb-4">
-                    <ShieldCheck className="text-emerald-400 w-8 h-8" />
-                 </div>
-                 <div className="text-3xl font-bold text-white mb-2">14U Capital</div>
-                 <div className="text-emerald-400 font-mono text-xs uppercase tracking-widest">Network Active</div>
-               </div>
-
-               <div className="relative z-10 bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-gray-400 text-xs font-bold uppercase">Recent Match</span>
-                    <span className="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded">Series A</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                     <div className="w-10 h-10 rounded-full bg-gray-700" />
-                     <div className="w-full h-px bg-gray-600/50 relative">
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-emerald-500 rounded-full" />
-                     </div>
-                     <div className="w-10 h-10 rounded-full bg-emerald-900 border border-emerald-500" />
-                  </div>
-               </div>
-            </div>
-          </motion.div>
+           {/* RIGHT: The Visual Engine (7 Cols) */}
+           <motion.div 
+             className="lg:col-span-7 h-full flex items-center justify-center lg:justify-end"
+             initial={{ opacity: 0, scale: 0.95 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             viewport={{ once: true }}
+             transition={{ duration: 1, ease: "easeOut" }}
+           >
+              <SynergyEngine />
+           </motion.div>
 
         </div>
       </div>
     </section>
   );
 }
-
-export { default as Hero } from './Hero';
-export { default as Stats } from './Stats';
-export { default as FoundersCorner } from './FoundersCorner';
-export { default as SlideFlow } from './SlideFlow';
-export { default as Consultancy } from './Consultancy';
-export { default as InvestorMockroom } from './InvestorMockroom';
-export { default as SED } from './SED';
-export { default as Funding } from './Funding';

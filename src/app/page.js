@@ -12,6 +12,7 @@ import {
   InvestorMockroom,
   SED
 } from '@/components/sections';
+import Funding from '@/components/sections/Funding';
 
 export default function Home() {
   return (
@@ -33,7 +34,7 @@ export default function Home() {
       
       {/* 6. SED (Coming Soon) */}
       <SED />
-      
+      <Funding />
       {/* 7. Founders Corner */}
       <FoundersCorner />
     </div>
